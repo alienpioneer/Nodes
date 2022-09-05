@@ -10,7 +10,8 @@ Canvas::Canvas(QRect size, QWidget *parent)
       m_color(QColor(118,110,110)),
       m_lineColor(QColor(190,140,148)),
       m_lineThickness(2),
-      m_drawLine(false)
+      m_drawLine(false),
+      m_drawSmoothLine(true)
 {
     setGeometry(size);
 
@@ -44,17 +45,23 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     if (m_drawLine)
     {
-        m_handleStart.setY(m_startPoint.y());
-        m_handleStart.setX(m_startPoint.x()+(m_endPoint.x()-m_startPoint.x())*0.4);
-
-        m_handleEnd.setY(m_endPoint.y());
-        m_handleEnd.setX(m_endPoint.x()-(m_endPoint.x()-m_startPoint.x())*0.4);
-
         QPainterPath path;
 
         path.moveTo(m_startPoint);
-        //path.lineTo(m_endPoint);
-        path.cubicTo(m_handleStart, m_handleEnd, m_endPoint);
+
+        if (m_drawSmoothLine)
+        {
+            m_handleStart.setY(m_startPoint.y());
+            m_handleStart.setX(m_startPoint.x()+(m_endPoint.x()-m_startPoint.x())*0.4);
+
+            m_handleEnd.setY(m_endPoint.y());
+            m_handleEnd.setX(m_endPoint.x()-(m_endPoint.x()-m_startPoint.x())*0.4);
+            path.cubicTo(m_handleStart, m_handleEnd, m_endPoint);
+        }
+        else
+        {
+            path.lineTo(m_endPoint);
+        }
 
         painter.drawPath(path);
     }

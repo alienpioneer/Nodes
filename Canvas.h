@@ -31,9 +31,12 @@ private:
     int     m_lineThickness;
     QPoint  m_startPoint, m_endPoint;
     QPoint  m_handleStart, m_handleEnd;
+
     bool    m_drawLine;
+    bool    m_drawSmoothLine;
 
     QMenu*  m_menu;
+    QList<QPainterPath*> m_pathList;
 };
 
 #endif // CANVAS_H
