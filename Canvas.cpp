@@ -44,14 +44,18 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     if (m_drawLine)
     {
+        m_handleStart.setY(m_startPoint.y());
+        m_handleStart.setX(m_startPoint.x()+(m_endPoint.x()-m_startPoint.x())*0.4);
+
+        m_handleEnd.setY(m_endPoint.y());
+        m_handleEnd.setX(m_endPoint.x()-(m_endPoint.x()-m_startPoint.x())*0.4);
+
         QPainterPath path;
+
         path.moveTo(m_startPoint);
-        path.lineTo(m_endPoint);
-//        path.quadTo(handleAUp , midA);
-//        path.quadTo(handleADown, endA);
-//        path.moveTo(startB);
-//        path.quadTo(handleBUp , midB);
-//        path.quadTo(handleBDown, endB);
+        //path.lineTo(m_endPoint);
+        path.cubicTo(m_handleStart, m_handleEnd, m_endPoint);
+
         painter.drawPath(path);
     }
 }

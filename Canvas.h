@@ -29,7 +29,8 @@ private:
     QColor  m_color;
     QColor  m_lineColor;
     int     m_lineThickness;
-    QPoint  m_startPoint, m_endPoint, m_mousePressOffset;
+    QPoint  m_startPoint, m_endPoint;
+    QPoint  m_handleStart, m_handleEnd;
     bool    m_drawLine;
 
     QMenu*  m_menu;
