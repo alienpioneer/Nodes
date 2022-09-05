@@ -7,11 +7,12 @@
 Canvas::Canvas(QRect size, QWidget *parent)
     : QWidget{parent},
       m_size(size),
-      m_color(QColor(118,110,110)),
+      m_color(QColor(100,100,110)),
       m_lineColor(QColor(190,140,148)),
       m_lineThickness(2),
       m_drawLine(false),
-      m_drawSmoothLine(true)
+      m_drawSmoothLine(true),
+      m_currentPath(nullptr)
 {
     setGeometry(size);
 
@@ -45,9 +46,9 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     if (m_drawLine)
     {
-        QPainterPath path;
+        m_currentPath = new QPainterPath();
 
-        path.moveTo(m_startPoint);
+        m_currentPath->moveTo(m_startPoint);
 
         if (m_drawSmoothLine)
         {
@@ -56,14 +57,22 @@ void Canvas::paintEvent(QPaintEvent *event)
 
             m_handleEnd.setY(m_endPoint.y());
             m_handleEnd.setX(m_endPoint.x()-(m_endPoint.x()-m_startPoint.x())*0.4);
-            path.cubicTo(m_handleStart, m_handleEnd, m_endPoint);
+            m_currentPath->cubicTo(m_handleStart, m_handleEnd, m_endPoint);
         }
         else
         {
-            path.lineTo(m_endPoint);
+            m_currentPath->lineTo(m_endPoint);
         }
 
-        painter.drawPath(path);
+        painter.drawPath(*m_currentPath);
+    }
+
+    if(!m_pathList.empty())
+    {
+        for(QPainterPath* path: qAsConst(m_pathList))
+        {
+            painter.drawPath(*path);
+        }
     }
 }
 
@@ -81,6 +90,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED( event );
     m_drawLine = false;
+    m_pathList.append(m_currentPath);
 }
 
 
@@ -96,7 +106,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     m_endPoint = mapToParent(event->pos());
     m_endPoint.setX(m_endPoint.x()-m_size.x());
     m_endPoint.setY(m_endPoint.y()-m_size.y());
-    //m_drawLine = true;
     update();
 }
 
@@ -108,7 +117,9 @@ void Canvas::contextMenuEvent(QContextMenuEvent *event)
 
 void Canvas::onClear()
 {
-    qDebug() << "Clear Action Clicked";
+//    qDebug() << "Clear Action Clicked";
+    m_pathList.clear();
+    update();
 }
 
 void Canvas::onNewNode()

@@ -36,6 +36,7 @@ private:
     bool    m_drawSmoothLine;
 
     QMenu*  m_menu;
+    QPainterPath* m_currentPath;
     QList<QPainterPath*> m_pathList;
 };
 

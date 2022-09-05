@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setGeometry(QRect(0, 0, 600, 400));
 
-    Canvas* frameWidget = new Canvas(QRect(25, 25, 550, 350), this);
-    frameWidget->setStyleSheet("border:2px solid black;");
+    Canvas* frameWidget = new Canvas(QRect(10, 10, 580, 380), this);
+    frameWidget->setStyleSheet("border:1px solid; border-color: rgb(52, 53, 56);");
 }
 
 MainWindow::~MainWindow()
