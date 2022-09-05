@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QMenu>
 
 class Canvas : public QWidget
 {
@@ -30,6 +31,8 @@ private:
     int     m_lineThickness;
     QPoint  m_startPoint, m_endPoint, m_mousePressOffset;
     bool    m_drawLine;
+
+    QMenu*  m_menu;
 };
 
 #endif // CANVAS_H
