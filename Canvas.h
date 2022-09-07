@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QMenu>
+#include "Node.h"
 
 class Canvas : public QWidget
 {
@@ -29,6 +30,7 @@ private:
     QColor  m_color;
     QColor  m_lineColor;
     int     m_lineThickness;
+    QPoint  m_currentMousePosition;
     QPoint  m_startPoint, m_endPoint;
     QPoint  m_handleStart, m_handleEnd;
 
@@ -38,6 +40,9 @@ private:
     QMenu*  m_menu;
     QPainterPath* m_currentPath;
     QList<QPainterPath*> m_pathList;
+
+    Node*   m_currentNode;
+    QList<Node*> m_nodeList;
 };
 
 #endif // CANVAS_H

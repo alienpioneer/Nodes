@@ -8,16 +8,19 @@ Canvas::Canvas(QRect size, QWidget *parent)
     : QWidget{parent},
       m_size(size),
       m_color(QColor(100,100,110)),
-      m_lineColor(QColor(190,140,148)),
+      m_lineColor(QColor(200,140,148)),
       m_lineThickness(2),
+      m_currentMousePosition(QPoint(0,0)),
       m_drawLine(false),
       m_drawSmoothLine(true),
-      m_currentPath(nullptr)
+      m_currentPath(nullptr),
+      m_currentNode(nullptr)
 {
     setGeometry(size);
+    setStyleSheet("border:1px solid; border-color: rgb(52, 53, 56);");
 
     m_menu = new QMenu(this);
-    m_menu->setStyleSheet("border:1px solid gray;");//background-color: #D1D1D1;
+    m_menu->setStyleSheet("border:1px solid gray;");
 
     QAction *newNode = new QAction("Create Node", this);
     QAction *clear = new QAction("Clear All", this);
@@ -79,18 +82,23 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    m_startPoint = mapToParent(event->pos());
-    m_startPoint.setX(m_startPoint.x()-m_size.x());
-    m_startPoint.setY(m_startPoint.y()-m_size.y());
-    m_drawLine = true;
+    if(event->button() == Qt::LeftButton)
+    {
+        m_startPoint = mapToParent(event->pos());
+        m_startPoint.setX(m_startPoint.x()-m_size.x());
+        m_startPoint.setY(m_startPoint.y()-m_size.y());
+        m_drawLine = true;
+    }
 }
 
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED( event );
-    m_drawLine = false;
-    m_pathList.append(m_currentPath);
+    if(event->button() == Qt::LeftButton)
+    {
+        m_drawLine = false;
+        m_pathList.append(m_currentPath);
+    }
 }
 
 
@@ -102,7 +110,6 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-
     m_endPoint = mapToParent(event->pos());
     m_endPoint.setX(m_endPoint.x()-m_size.x());
     m_endPoint.setY(m_endPoint.y()-m_size.y());
@@ -112,17 +119,24 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 void Canvas::contextMenuEvent(QContextMenuEvent *event)
 {
-    m_menu->popup(mapToGlobal(event->pos()));
+    m_currentMousePosition = mapToGlobal(event->pos());
+//    QPoint currentPosition = mapToGlobal(event->pos());
+//    m_currentMousePosition.setX(currentPosition.x()+m_size.x());
+//    m_currentMousePosition.setY(currentPosition.y()+m_size.y());
+    m_menu->popup(m_currentMousePosition);
 }
 
 void Canvas::onClear()
 {
-//    qDebug() << "Clear Action Clicked";
     m_pathList.clear();
+    //m_nodeList.clear(); // TO DO FIX THIS
     update();
 }
 
 void Canvas::onNewNode()
 {
-    qDebug() << "NewNode Action Clicked";
+    m_currentNode = new Node(QRect(0,0,100,50), this);
+    m_nodeList.append(m_currentNode);
+    m_currentNode->show();
+    m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
 }
