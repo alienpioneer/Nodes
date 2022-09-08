@@ -80,6 +80,18 @@ void Canvas::paintEvent(QPaintEvent *event)
 }
 
 
+// TO DO FIX THIS
+void Canvas::onNewNode()
+{
+    m_currentNode = new Node(QRect(0,0,100,50), this);
+    connect(m_currentNode, &Node::moveNode, this, &Canvas::onMoveNode);
+    connect(m_currentNode, &Node::selectNode, this, &Canvas::onSelectNode);
+    m_currentNode->show();
+    m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
+    m_nodeList.append(m_currentNode);
+}
+
+
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
@@ -114,29 +126,45 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     m_endPoint.setX(m_endPoint.x()-m_size.x());
     m_endPoint.setY(m_endPoint.y()-m_size.y());
     update();
+    //qDebug() << "Canvas: mouse MOVE";
 }
 
 
 void Canvas::contextMenuEvent(QContextMenuEvent *event)
 {
     m_currentMousePosition = mapToGlobal(event->pos());
-//    QPoint currentPosition = mapToGlobal(event->pos());
-//    m_currentMousePosition.setX(currentPosition.x()+m_size.x());
-//    m_currentMousePosition.setY(currentPosition.y()+m_size.y());
     m_menu->popup(m_currentMousePosition);
 }
 
+
 void Canvas::onClear()
 {
+    for (QPainterPath* path: qAsConst(m_pathList))
+    {
+        delete path;
+        path = nullptr;
+    }
     m_pathList.clear();
-    //m_nodeList.clear(); // TO DO FIX THIS
+
+    for (Node* node: qAsConst(m_nodeList))
+    {
+        node->hide();
+        delete node;
+        node = nullptr;
+    }
+    m_nodeList.clear();
+
     update();
 }
 
-void Canvas::onNewNode()
+
+void Canvas::onMoveNode(const QPoint position)
 {
-    m_currentNode = new Node(QRect(0,0,100,50), this);
-    m_nodeList.append(m_currentNode);
-    m_currentNode->show();
-    m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
+    m_currentNode->move( position );
+}
+
+
+void Canvas::onSelectNode(Node *node)
+{
+    m_currentNode = node;
 }

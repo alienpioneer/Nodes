@@ -15,6 +15,8 @@ public:
 private slots:
     void    onNewNode();
     void    onClear();
+    void    onMoveNode(const QPoint position);
+    void    onSelectNode(Node* node);
 
     // QWidget interface
 protected:

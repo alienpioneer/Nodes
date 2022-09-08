@@ -10,6 +10,10 @@ class Node : public QWidget
 public:
     explicit Node(QRect size, QWidget *parent = nullptr);
 
+signals:
+    void moveNode(const QPoint position);
+    void selectNode(Node* node);
+
     // QWidget interface
 protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
@@ -23,6 +27,8 @@ protected:
 private:
     QRect   m_size;
     QColor  m_color;
+    bool    m_enableMovement;
+    QPoint  m_currentMousePosition;
 };
 
 #endif // NODE_H
