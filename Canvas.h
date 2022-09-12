@@ -14,9 +14,11 @@ public:
 
 private slots:
     void    onNewNode();
+    void    onClearCurves();
     void    onClear();
-    void    onMoveNode(const QPoint position);
+
     void    onSelectNode(Node* node);
+    void    onMoveNode(const QPoint position);
 
     // QWidget interface
 protected:
@@ -32,7 +34,9 @@ private:
     QColor  m_color;
     QColor  m_lineColor;
     int     m_lineThickness;
+
     QPoint  m_currentMousePosition;
+
     QPoint  m_startPoint, m_endPoint;
     QPoint  m_handleStart, m_handleEnd;
 
@@ -43,7 +47,8 @@ private:
     QPainterPath* m_currentPath;
     QList<QPainterPath*> m_pathList;
 
-    Node*   m_currentNode;
+    int m_nodeWidth,m_nodeHeight;
+    Node* m_currentNode;
     QList<Node*> m_nodeList;
 };
 

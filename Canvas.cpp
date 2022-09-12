@@ -14,6 +14,8 @@ Canvas::Canvas(QRect size, QWidget *parent)
       m_drawLine(false),
       m_drawSmoothLine(true),
       m_currentPath(nullptr),
+      m_nodeWidth(100),
+      m_nodeHeight(50),
       m_currentNode(nullptr)
 {
     setGeometry(size);
@@ -21,15 +23,16 @@ Canvas::Canvas(QRect size, QWidget *parent)
 
     m_menu = new QMenu(this);
     m_menu->setStyleSheet("border:1px solid gray;");
-
     QAction *newNode = new QAction("Create Node", this);
+    QAction *clearCurves = new QAction("Clear Curves", this);
     QAction *clear = new QAction("Clear All", this);
     m_menu->addAction(newNode);
     connect(newNode,&QAction::triggered,this,&Canvas::onNewNode);
+    m_menu->addAction(clearCurves);
+    connect(clearCurves,&QAction::triggered,this,&Canvas::onClearCurves);
     m_menu->addAction(clear);
     connect(clear,&QAction::triggered,this,&Canvas::onClear);
 }
-
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
@@ -79,18 +82,16 @@ void Canvas::paintEvent(QPaintEvent *event)
     }
 }
 
-
 // TO DO FIX THIS
 void Canvas::onNewNode()
 {
-    m_currentNode = new Node(QRect(0,0,100,50), this);
+    m_currentNode = new Node(QRect(0,0,m_nodeWidth,m_nodeHeight), this);
     connect(m_currentNode, &Node::moveNode, this, &Canvas::onMoveNode);
     connect(m_currentNode, &Node::selectNode, this, &Canvas::onSelectNode);
     m_currentNode->show();
     m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
     m_nodeList.append(m_currentNode);
 }
-
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
@@ -103,7 +104,6 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     }
 }
 
-
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
@@ -113,12 +113,10 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-
 void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED( event );
 }
-
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
@@ -129,34 +127,51 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     //qDebug() << "Canvas: mouse MOVE";
 }
 
-
 void Canvas::contextMenuEvent(QContextMenuEvent *event)
 {
     m_currentMousePosition = mapToGlobal(event->pos());
     m_menu->popup(m_currentMousePosition);
 }
 
-
 void Canvas::onClear()
 {
-    for (QPainterPath* path: qAsConst(m_pathList))
+    if(!m_pathList.empty())
     {
-        delete path;
-        path = nullptr;
+        for (QPainterPath* path: qAsConst(m_pathList))
+        {
+            delete path;
+            path = nullptr;
+        }
+        m_pathList.clear();
     }
-    m_pathList.clear();
 
-    for (Node* node: qAsConst(m_nodeList))
+    if(!m_nodeList.empty())
     {
-        node->hide();
-        delete node;
-        node = nullptr;
+        for (Node* node: qAsConst(m_nodeList))
+        {
+            node->hide();
+            delete node;
+            node = nullptr;
+        }
+        m_nodeList.clear();
     }
-    m_nodeList.clear();
 
     update();
 }
 
+void Canvas::onClearCurves()
+{
+    if(!m_pathList.empty())
+    {
+        for (QPainterPath* path: qAsConst(m_pathList))
+        {
+            delete path;
+            path = nullptr;
+        }
+        m_pathList.clear();
+    }
+    update();
+}
 
 void Canvas::onMoveNode(const QPoint position)
 {
