@@ -50,6 +50,8 @@ private:
     int m_nodeWidth,m_nodeHeight;
     Node* m_currentNode;
     QList<Node*> m_nodeList;
+
+    int MAX_W, MAX_H;
 };
 
 #endif // CANVAS_H

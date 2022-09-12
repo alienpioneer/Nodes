@@ -32,6 +32,9 @@ Canvas::Canvas(QRect size, QWidget *parent)
     connect(clearCurves,&QAction::triggered,this,&Canvas::onClearCurves);
     m_menu->addAction(clear);
     connect(clear,&QAction::triggered,this,&Canvas::onClear);
+
+    MAX_W = width()-m_nodeWidth;
+    MAX_H = height()-m_nodeHeight;
 }
 
 void Canvas::paintEvent(QPaintEvent *event)
@@ -175,7 +178,18 @@ void Canvas::onClearCurves()
 
 void Canvas::onMoveNode(const QPoint position)
 {
-    m_currentNode->move( position );
+    QPoint movePosition = position;
+
+    if ( position.x() <= 0 )
+        movePosition.setX(0);
+    if (position.x() >= MAX_W)
+        movePosition.setX(MAX_W);
+    if ( position.y() <= 0 )
+        movePosition.setY(0);
+    if (position.y() >= MAX_H)
+        movePosition.setY(MAX_H);
+
+    m_currentNode->move(movePosition);
 }
 
 
