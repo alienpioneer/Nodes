@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QWidget>
+#include "NodeCore.h"
+#include "NodeConnection.h"
 
 class Node : public QWidget
 {
@@ -18,17 +20,21 @@ signals:
 protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
-    virtual void enterEvent(QEvent *event) override;
-    virtual void leaveEvent(QEvent *event) override;
-    virtual void paintEvent(QPaintEvent *event) override;
     virtual void contextMenuEvent(QContextMenuEvent *event) override;
+    virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    QRect   m_size;
-    QColor  m_color;
-    bool    m_enableMovement;
-    QPoint  m_currentMousePosition;
+    QRect       m_size;
+    QRect       m_connectorSize;
+    bool        m_enableMovement;
+    QPoint      m_currentMousePosition;
+
+    NodeCore*   m_nodeCore;
+    NodeConnection* m_nodeConnection;
+    QList<NodeConnection*> m_IN_connectList;
+    QList<NodeConnection*> m_OUT_connectList;
 };
 
 #endif // NODE_H

@@ -1,1 +1,5 @@
 Nodes.pro.user
+
+Build/
+
+.qtc_clangd/

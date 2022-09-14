@@ -41,13 +41,13 @@ private:
     QPoint  m_handleStart, m_handleEnd;
 
     bool    m_drawStraightLines;
-    bool    m_drawText;
     bool    m_drawSmoothLines;
     bool    m_redrawBkg;
     bool    m_redrawStyles;
 
     QMenu*  m_menu;
     QMenu*  m_nodeSubmenu;
+
     QPainterPath* m_currentPath;
     QList<QPainterPath*> m_pathList;
 

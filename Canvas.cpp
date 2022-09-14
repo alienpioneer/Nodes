@@ -51,8 +51,8 @@ Canvas::Canvas(QRect size, QWidget *parent)
     NODE_WIDTH = width()/6;
     NODE_HEIGHT = height()/8;
 
-    qDebug() << width() <<" "<< height();
-    qDebug() << NODE_WIDTH <<" "<< NODE_HEIGHT;
+//    qDebug() << width() <<" "<< height();
+//    qDebug() << NODE_WIDTH <<" "<< NODE_HEIGHT;
 
     MAX_W = width() - NODE_WIDTH;
     MAX_H = height() - NODE_HEIGHT;
@@ -67,12 +67,8 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     QPainter painter( this );
     painter.setRenderHint( QPainter::Antialiasing);
-
-    if (m_drawText)
-    {
-        QPen pen( m_lineColor, m_lineThickness, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin );
-        painter.setPen( pen );
-    }
+    QPen pen( m_lineColor, m_lineThickness, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin );
+    painter.setPen( pen );
 
     if (m_redrawBkg)
     {
@@ -131,6 +127,7 @@ void Canvas::onNewNode()
     m_currentNode->show();
     m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
     m_nodeList.append(m_currentNode);
+    m_currentNode->setStyleSheet("border:1px solid black;");
 }
 
 

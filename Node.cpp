@@ -1,21 +1,61 @@
 #include "Node.h"
-#include <QStyleOption>
-#include <QPainter>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QPainter>
+#include <QStyleOption>
 
 Node::Node(QRect size, QWidget *parent)
     : QWidget{parent},
-    m_size(size),
-    m_color(QColor(80,80,80,255)),
-    m_enableMovement(false)
+      m_size(size),
+      m_enableMovement(false)
 {
     setGeometry(size);
-    setStyleSheet("border-width: 1px; border-style: solid; border-radius: 6px;"
-                  "border-color: rgb(42, 43, 46, 255); background-color: rgb(80,80,80,255)");
-//    setAttribute(Qt::WA_TranslucentBackground);
+    m_nodeCore = new NodeCore(QRect(5, 0, size.width()-10, size.height()), this);
+    NodeConnection* con1 = new NodeConnection(QRect(0, 0, 10, 10), this);
+    NodeConnection* con2 = new NodeConnection(QRect(0, 0, 10, 10), this);
+    con1->move(0,10);
+    con2->move(0,30);
 }
 
+void Node::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        //qDebug() << "Node mouse press";
+        emit selectNode(this);
+        m_enableMovement = true;
+        m_currentMousePosition = event->pos();
+    }
+}
+
+void Node::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        //qDebug() << "Node mouse release" << "_enableMovement " << m_enableMovement;
+        m_enableMovement = false;
+    }
+}
+
+void Node::mouseDoubleClickEvent(QMouseEvent *event)
+{
+
+}
+
+void Node::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_enableMovement)
+    {
+        //qDebug() << "Node mouseMoveEvent() mouse move";
+        event->accept();
+        emit moveNode(mapToParent(event->pos()) - m_currentMousePosition);
+    }
+}
+
+void Node::contextMenuEvent(QContextMenuEvent *event)
+{
+
+}
 
 void Node::paintEvent(QPaintEvent *event)
 {
@@ -24,60 +64,7 @@ void Node::paintEvent(QPaintEvent *event)
     QPainter painter( this );
     painter.setRenderHint( QPainter::Antialiasing);
 
-//    QRect geo(0, 0, width(), height());
-//    painter.fillRect(geo, m_color);
-
     QStyleOption styleOpt;
     styleOpt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-}
-
-
-void Node::mousePressEvent(QMouseEvent *event)
-{
-    if(event->button() == Qt::LeftButton)
-    {
-        //qDebug() << "Node: mouse press";
-        emit selectNode(this);
-        m_enableMovement = true;
-        m_currentMousePosition = event->pos();
-    }
-}
-
-
-void Node::mouseReleaseEvent(QMouseEvent *event)
-{
-
-    if(event->button() == Qt::LeftButton)
-    {
-        m_enableMovement = false;
-    }
-}
-
-
-void Node::mouseMoveEvent(QMouseEvent *event)
-{
-    if (m_enableMovement)
-    {
-        event->accept();
-        emit moveNode(mapToParent(event->pos()) - m_currentMousePosition);
-    }
-}
-
-
-void Node::enterEvent(QEvent *event)
-{
-
-}
-
-
-void Node::leaveEvent(QEvent *event)
-{
-
-}
-
-
-void Node::contextMenuEvent(QContextMenuEvent *event)
-{
-
 }
