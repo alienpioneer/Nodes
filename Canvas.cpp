@@ -127,7 +127,6 @@ void Canvas::onNewNode()
     m_currentNode->show();
     m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
     m_nodeList.append(m_currentNode);
-    m_currentNode->setStyleSheet("border:1px solid black;");
 }
 
 

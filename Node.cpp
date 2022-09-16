@@ -7,14 +7,14 @@
 Node::Node(QRect size, QWidget *parent)
     : QWidget{parent},
       m_size(size),
-      m_enableMovement(false)
+      m_enableMovement(false),
+      m_connexionSize(10)
 {
     setGeometry(size);
-    m_nodeCore = new NodeCore(QRect(5, 0, size.width()-10, size.height()), this);
-    NodeConnection* con1 = new NodeConnection(QRect(0, 0, 10, 10), this);
-    NodeConnection* con2 = new NodeConnection(QRect(0, 0, 10, 10), this);
-    con1->move(0,10);
-    con2->move(0,30);
+    m_nodeCore = new NodeCore(QRect(m_connexionSize/2, 0, size.width()-m_connexionSize, size.height()), this);
+    addConnexions(Connexion::IN, 2);
+    addConnexions(Connexion::OUT, 1);
+    //setStyleSheet("border:1px solid black;");
 }
 
 void Node::mousePressEvent(QMouseEvent *event)
@@ -64,7 +64,36 @@ void Node::paintEvent(QPaintEvent *event)
     QPainter painter( this );
     painter.setRenderHint( QPainter::Antialiasing);
 
-    QStyleOption styleOpt;
-    styleOpt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+//    QStyleOption styleOpt;
+//    styleOpt.init(this);
+//    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+}
+
+void Node::createConnexions(Connexion type, int count)
+{
+
+}
+
+void Node::addConnexions(Connexion type, int count)
+{
+    QList<NodeConnection*> connexionList;
+    int xPosition;
+    int yPositionOffset = height()/(count+1);
+
+    if (type == Connexion::IN)
+    {
+        connexionList = m_IN_connectList;
+        xPosition = 0;
+    }
+    else
+    {
+        connexionList = m_OUT_connectList;
+        xPosition = width()-m_connexionSize;
+    }
+
+    for(int i =0; i<count;i++)
+    {
+        connexionList.append(new NodeConnection(QSize(m_connexionSize, m_connexionSize), this));
+        connexionList[i]->move(xPosition,(i+1)*yPositionOffset-m_connexionSize/2);
+    }
 }

@@ -1,14 +1,16 @@
 #include "NodeConnection.h"
 #include <QPainter>
+#include <QMouseEvent>
+#include <QDebug>
 
-NodeConnection::NodeConnection(QRect size, QWidget *parent)
+NodeConnection::NodeConnection(QSize size, QWidget *parent)
     : QWidget{parent},
       m_size(size),
       m_color(QColor(180,120,20)),
       m_lineColor(QColor(20,30,40)),
       m_lineThickness(1)
 {
-    setGeometry(size);
+    setFixedSize(size);
 }
 
 void NodeConnection::paintEvent(QPaintEvent *event)
@@ -26,7 +28,9 @@ void NodeConnection::paintEvent(QPaintEvent *event)
 
 void NodeConnection::mousePressEvent(QMouseEvent *event)
 {
-    
+    qDebug() << mapToGlobal(QPoint(width()/2,height()/2));
+    // On click send to canvas a pointer to this object and the position
+    // So that the curve will be redrawn every time the node is moved
 }
 
 void NodeConnection::mouseReleaseEvent(QMouseEvent *event)
@@ -36,10 +40,16 @@ void NodeConnection::mouseReleaseEvent(QMouseEvent *event)
 
 void NodeConnection::enterEvent(QEvent *event)
 {
-    
+    m_color = QColor(220,160,60);
+    m_lineColor = QColor(50,60,40);
+    m_lineThickness = 4;
+    update();
 }
 
 void NodeConnection::leaveEvent(QEvent *event)
 {
-    
+    m_color = QColor(180,120,20);
+    m_lineColor = QColor(20,30,40);
+    m_lineThickness = 1;
+    update();
 }

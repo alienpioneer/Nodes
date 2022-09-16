@@ -8,7 +8,7 @@ class NodeConnection : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NodeConnection(QRect size, QWidget *parent = nullptr);
+    explicit NodeConnection(QSize size, QWidget *parent = nullptr);
 
     // QWidget interface
 protected:
@@ -19,7 +19,7 @@ protected:
     virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    QRect   m_size;
+    QSize   m_size;
     QColor  m_color;
     QColor  m_lineColor;
     int     m_lineThickness;

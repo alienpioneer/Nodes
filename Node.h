@@ -9,6 +9,13 @@
 class Node : public QWidget
 {
     Q_OBJECT
+
+    enum class Connexion
+    {
+        IN = 0,
+        OUT
+    };
+
 public:
     explicit Node(QRect size, QWidget *parent = nullptr);
 
@@ -26,15 +33,21 @@ protected:
     virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    QRect       m_size;
-    QRect       m_connectorSize;
-    bool        m_enableMovement;
-    QPoint      m_currentMousePosition;
+    void createConnexions(Connexion type, int count);
+    void addConnexions(Connexion type, int count);
 
-    NodeCore*   m_nodeCore;
-    NodeConnection* m_nodeConnection;
-    QList<NodeConnection*> m_IN_connectList;
-    QList<NodeConnection*> m_OUT_connectList;
+private:
+    QRect                   m_size;
+    QRect                   m_connectorSize;
+    bool                    m_enableMovement;
+    QPoint                  m_currentMousePosition;
+
+    int                     m_connexionSize;
+
+    NodeCore*               m_nodeCore;
+    NodeConnection*         m_nodeConnection;
+    QList<NodeConnection*>  m_IN_connectList;
+    QList<NodeConnection*>  m_OUT_connectList;
 };
 
 #endif // NODE_H
