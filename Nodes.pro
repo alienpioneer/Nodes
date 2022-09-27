@@ -11,8 +11,8 @@ CONFIG += c++17
 SOURCES += \
     Canvas.cpp \
     Node.cpp \
-    NodeConnection.cpp \
     NodeCore.cpp \
+    NodePlug.cpp \
     main.cpp \
     MainWindow.cpp
 
@@ -20,8 +20,8 @@ HEADERS += \
     Canvas.h \
     MainWindow.h \
     Node.h \
-    NodeConnection.h \
-    NodeCore.h
+    NodeCore.h \
+    NodePlug.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -76,24 +76,24 @@ void Node::createConnexions(Connexion type, int count)
 
 void Node::addConnexions(Connexion type, int count)
 {
-    QList<NodeConnection*> connexionList;
+    QList<NodePlug*> connexionList;
     int xPosition;
     int yPositionOffset = height()/(count+1);
 
     if (type == Connexion::IN)
     {
-        connexionList = m_IN_connectList;
+        connexionList = m_IN_plugList;
         xPosition = 0;
     }
     else
     {
-        connexionList = m_OUT_connectList;
+        connexionList = m_OUT_plugList;
         xPosition = width()-m_connexionSize;
     }
 
     for(int i =0; i<count;i++)
     {
-        connexionList.append(new NodeConnection(QSize(m_connexionSize, m_connexionSize), this));
+        connexionList.append(new NodePlug(QSize(m_connexionSize, m_connexionSize), this));
         connexionList[i]->move(xPosition,(i+1)*yPositionOffset-m_connexionSize/2);
     }
 }

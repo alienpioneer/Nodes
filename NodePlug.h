@@ -1,14 +1,14 @@
-#ifndef NODECONNECTION_H
-#define NODECONNECTION_H
+#ifndef NODEPLUG_H
+#define NODEPLUG_H
 
 #include <QObject>
 #include <QWidget>
 
-class NodeConnection : public QWidget
+class NodePlug : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NodeConnection(QSize size, QWidget *parent = nullptr);
+    explicit NodePlug(QSize size, QWidget *parent = nullptr);
 
     // QWidget interface
 protected:
@@ -25,4 +25,4 @@ private:
     int     m_lineThickness;
 };
 
-#endif // NODECONNECTION_H
+#endif // NODEPLUG_H

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include "NodeCore.h"
-#include "NodeConnection.h"
+#include "NodePlug.h"
 
 class Node : public QWidget
 {
@@ -37,17 +37,17 @@ private:
     void addConnexions(Connexion type, int count);
 
 private:
-    QRect                   m_size;
-    QRect                   m_connectorSize;
-    bool                    m_enableMovement;
-    QPoint                  m_currentMousePosition;
+    QRect               m_size;
+    QRect               m_connectorSize;
+    bool                m_enableMovement;
+    QPoint              m_currentMousePosition;
 
-    int                     m_connexionSize;
+    int                 m_connexionSize;
 
-    NodeCore*               m_nodeCore;
-    NodeConnection*         m_nodeConnection;
-    QList<NodeConnection*>  m_IN_connectList;
-    QList<NodeConnection*>  m_OUT_connectList;
+    NodeCore*           m_nodeCore;
+    NodePlug*           m_nodeConnection;
+    QList<NodePlug*>    m_IN_plugList;
+    QList<NodePlug*>    m_OUT_plugList;
 };
 
 #endif // NODE_H
