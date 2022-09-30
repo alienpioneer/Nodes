@@ -7,12 +7,12 @@
 NodeCore::NodeCore(QRect size, QWidget *parent)
     : QWidget{parent},
     m_size(size),
-    m_color(QColor(80,80,80,255)),
+    m_color(QColor(80,80,80)),
     m_enableMovement(false)
 {
     setGeometry(size);
     setStyleSheet("border-width: 1px; border-style: solid; border-radius: 6px;"
-                  "border-color: rgb(42, 43, 46, 255); background-color: rgb(80,80,80,255)");
+                  "border-color: rgb(42, 43, 46); background-color: rgb(80,80,80)");
 //    setAttribute(Qt::WA_TranslucentBackground);
 }
 

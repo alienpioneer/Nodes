@@ -18,6 +18,10 @@ protected:
     virtual void leaveEvent(QEvent *event) override;
     virtual void paintEvent(QPaintEvent *event) override;
 
+signals:
+    void beginNewConnection(NodePlug* plug);
+    void endNewConnection(NodePlug* plug);
+
 private:
     QSize   m_size;
     QColor  m_color;

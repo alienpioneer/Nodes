@@ -12,9 +12,19 @@ Node::Node(QRect size, QWidget *parent)
 {
     setGeometry(size);
     m_nodeCore = new NodeCore(QRect(m_connexionSize/2, 0, size.width()-m_connexionSize, size.height()), this);
-    addConnexions(Connexion::IN, 2);
-    addConnexions(Connexion::OUT, 1);
+    addConnectionSlots(Connection::IN, 2);
+    addConnectionSlots(Connection::OUT, 1);
     //setStyleSheet("border:1px solid black;");
+}
+
+void Node::on_beginNewConnection(NodePlug *plug)
+{
+    emit beginConnection(plug);
+}
+
+void Node::on_endNewConnection(NodePlug *plug)
+{
+    emit endConnection(plug);
 }
 
 void Node::mousePressEvent(QMouseEvent *event)
@@ -69,18 +79,18 @@ void Node::paintEvent(QPaintEvent *event)
 //    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
-void Node::createConnexions(Connexion type, int count)
+void Node::createConnectionSlots(Connection type, int count)
 {
 
 }
 
-void Node::addConnexions(Connexion type, int count)
+void Node::addConnectionSlots(Connection type, int count)
 {
     QList<NodePlug*> connexionList;
     int xPosition;
     int yPositionOffset = height()/(count+1);
 
-    if (type == Connexion::IN)
+    if (type == Connection::IN)
     {
         connexionList = m_IN_plugList;
         xPosition = 0;
@@ -95,5 +105,7 @@ void Node::addConnexions(Connexion type, int count)
     {
         connexionList.append(new NodePlug(QSize(m_connexionSize, m_connexionSize), this));
         connexionList[i]->move(xPosition,(i+1)*yPositionOffset-m_connexionSize/2);
+        connect(connexionList[i], &NodePlug::beginNewConnection, this, &Node::on_beginNewConnection);
+        connect(connexionList[i], &NodePlug::endNewConnection, this, &Node::on_endNewConnection);
     }
 }

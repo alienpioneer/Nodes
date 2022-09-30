@@ -10,7 +10,7 @@ class Node : public QWidget
 {
     Q_OBJECT
 
-    enum class Connexion
+    enum class Connection
     {
         IN = 0,
         OUT
@@ -22,6 +22,12 @@ public:
 signals:
     void moveNode(const QPoint position);
     void selectNode(Node* node);
+    void beginConnection(NodePlug* plug);
+    void endConnection(NodePlug* plug);
+
+private slots:
+    void on_beginNewConnection(NodePlug* plug);
+    void on_endNewConnection(NodePlug* plug);
 
     // QWidget interface
 protected:
@@ -33,8 +39,8 @@ protected:
     virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    void createConnexions(Connexion type, int count);
-    void addConnexions(Connexion type, int count);
+    void createConnectionSlots(Connection type, int count);
+    void addConnectionSlots(Connection type, int count);
 
 private:
     QRect               m_size;

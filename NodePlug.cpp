@@ -29,18 +29,26 @@ void NodePlug::paintEvent(QPaintEvent *event)
 
 void NodePlug::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << mapToGlobal(QPoint(width()/2,height()/2));
+    if(event->button() == Qt::LeftButton)
+    {
+        event->accept();
+        emit beginNewConnection(this);
+    }
+
+    //qDebug() << "NodePlug::mousePressEvent " << mapToGlobal(QPoint(width()/2,height()/2));
     // On click send to canvas a pointer to this object and the position
     // So that the curve will be redrawn every time the node is moved
 }
 
 void NodePlug::mouseReleaseEvent(QMouseEvent *event)
 {
-    
+    event->accept();
+    emit endNewConnection(this);
 }
 
 void NodePlug::enterEvent(QEvent *event)
 {
+    event->accept();
     m_color = QColor(225,200,50);
     m_lineColor = QColor(50,60,40);
     update();
@@ -48,6 +56,7 @@ void NodePlug::enterEvent(QEvent *event)
 
 void NodePlug::leaveEvent(QEvent *event)
 {
+    event->accept();
     m_color = QColor(180,120,20);
     m_lineColor = QColor(20,30,40);
     update();
