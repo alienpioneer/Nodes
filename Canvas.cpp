@@ -1,6 +1,7 @@
 #include "Canvas.h"
 #include <QStyleOption>
 #include <QPainter>
+#include <QPainterPath>
 #include <QMouseEvent>
 #include <QDebug>
 
@@ -11,7 +12,7 @@ Canvas::Canvas(QRect size, QWidget *parent)
       m_lineColor(QColor(200,140,148)),
       m_lineThickness(2),
       m_currentMousePosition(QPoint(0,0)),
-      m_drawStraightLines(false),
+      m_startDrawLine(false),
       m_drawSmoothLines(true),
       m_currentPath(nullptr),
       m_currentNode(nullptr)
@@ -27,26 +28,26 @@ Canvas::Canvas(QRect size, QWidget *parent)
 
     QAction *clearCurves = new QAction("Clear Curves", this);
     m_menu->addAction(clearCurves);
-    connect(clearCurves,&QAction::triggered,this,&Canvas::onClearCurves);
+    connect(clearCurves,&QAction::triggered,this,&Canvas::on_clearCurves);
 
     QAction *clear = new QAction("Clear All", this);
     m_menu->addAction(clear);
-    connect(clear,&QAction::triggered,this,&Canvas::onClear);
+    connect(clear,&QAction::triggered,this,&Canvas::on_clearAll);
 
     // One input one output
     QAction *newNode = new QAction("Default", this);
     m_nodeSubmenu->addAction(newNode);
-    connect(newNode,&QAction::triggered,this,&Canvas::onNewNode);
+    connect(newNode,&QAction::triggered,this,&Canvas::on_newNode);
 
     // Operation of 2
     QAction *newNodeOp2 = new QAction("Operation 2", this);
     m_nodeSubmenu->addAction(newNodeOp2);
-    connect(newNodeOp2,&QAction::triggered,this,&Canvas::onNewNode);
+    connect(newNodeOp2,&QAction::triggered,this,&Canvas::on_newNode);
 
     // Operation of 2
     QAction *newNodeOp4 = new QAction("Operation 4", this);
     m_nodeSubmenu->addAction(newNodeOp4);
-    connect(newNodeOp4,&QAction::triggered,this,&Canvas::onNewNode);
+    connect(newNodeOp4,&QAction::triggered,this,&Canvas::on_newNode);
 
     NODE_WIDTH = width()/6;
     NODE_HEIGHT = height()/8;
@@ -85,9 +86,12 @@ void Canvas::paintEvent(QPaintEvent *event)
         //m_redrawStyles = false;
     }
 
-    if (m_drawStraightLines)
+    if (m_startDrawLine)
     {
-        m_currentPath = new QPainterPath();
+        if (!m_currentPath)
+            m_currentPath = new QPainterPath();
+        else
+            m_currentPath->clear();
 
         m_currentPath->moveTo(m_startPoint);
 
@@ -117,13 +121,13 @@ void Canvas::paintEvent(QPaintEvent *event)
     }
 }
 
-// TO DO FIX THIS
-void Canvas::onNewNode()
+// TODO FIX THIS
+void Canvas::on_newNode()
 {
     //TODO Add context to create node
     m_currentNode = new Node(QRect(0, 0, NODE_WIDTH, NODE_HEIGHT), this);
-    connect(m_currentNode, &Node::moveNode, this, &Canvas::onMoveNode);
-    connect(m_currentNode, &Node::selectNode, this, &Canvas::onSelectNode);
+    connect(m_currentNode, &Node::moveNode, this, &Canvas::on_moveNode);
+    connect(m_currentNode, &Node::selectNode, this, &Canvas::on_selectNode);
     m_currentNode->show();
     m_currentNode->move( m_currentMousePosition - QPoint(m_size.x(),4*m_size.y())); // TO DO FIX THIS ???
     m_nodeList.append(m_currentNode);
@@ -137,7 +141,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         m_startPoint = mapToParent(event->pos());
         m_startPoint.setX(m_startPoint.x()-m_size.x());
         m_startPoint.setY(m_startPoint.y()-m_size.y());
-        m_drawStraightLines = true;
+        m_startDrawLine = true;
     }
 }
 
@@ -145,8 +149,11 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
-        m_drawStraightLines = false;
+        m_startDrawLine = false;
         m_pathList.append(m_currentPath);
+
+//        delete m_currentPath;
+        m_currentPath = nullptr;
     }
 }
 
@@ -170,7 +177,7 @@ void Canvas::contextMenuEvent(QContextMenuEvent *event)
     m_menu->popup(m_currentMousePosition);
 }
 
-void Canvas::onClear()
+void Canvas::on_clearAll()
 {
     if(!m_pathList.empty())
     {
@@ -196,7 +203,7 @@ void Canvas::onClear()
     update();
 }
 
-void Canvas::onClearCurves()
+void Canvas::on_clearCurves()
 {
     if(!m_pathList.empty())
     {
@@ -210,7 +217,7 @@ void Canvas::onClearCurves()
     update();
 }
 
-void Canvas::onMoveNode(const QPoint position)
+void Canvas::on_moveNode(const QPoint position)
 {
     QPoint movePosition = position;
 
@@ -227,7 +234,7 @@ void Canvas::onMoveNode(const QPoint position)
 }
 
 
-void Canvas::onSelectNode(Node *node)
+void Canvas::on_selectNode(Node *node)
 {
     m_currentNode = node;
 }

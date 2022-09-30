@@ -13,12 +13,12 @@ public:
     explicit Canvas(QRect size, QWidget *parent = nullptr);
 
 private slots:
-    void    onNewNode();
-    void    onClearCurves();
-    void    onClear();
+    void    on_newNode();
+    void    on_clearCurves();
+    void    on_clearAll();
 
-    void    onSelectNode(Node* node);
-    void    onMoveNode(const QPoint position);
+    void    on_selectNode(Node* node);
+    void    on_moveNode(const QPoint position);
 
     // QWidget interface
 protected:
@@ -40,7 +40,7 @@ private:
     QPoint  m_startPoint, m_endPoint;
     QPoint  m_handleStart, m_handleEnd;
 
-    bool    m_drawStraightLines;
+    bool    m_startDrawLine;
     bool    m_drawSmoothLines;
     bool    m_redrawBkg;
     bool    m_redrawStyles;
