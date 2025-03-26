@@ -1,1 +1,1 @@
-This is a simple Qt5 nodes test. The application is based on widgets and it draws some nodes on a canvas and supports connections between nodes.
+This is a simple Qt5 nodes test. The application is based on widgets and it draws some nodes on a canvas and supports connections between nodes. Add a node by opening the menu with a RMB click and create a connection by dragging a line from one node output to another node input.
